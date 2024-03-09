@@ -18,39 +18,31 @@ class Minimax:
     #     else:
     #         return None
         
-    def minimax(self, depth, state, curr_player, use_alpha_beta=True):
-        """
-        Implements the minimax algorithm with optional alpha-beta pruning to find the best move and its associated value.
-        Returns the best move (as a column number) and the associated value.
-        """
+    def minimax(self, depth, state, curr_player, use_alpha_beta=True, alpha=-float('inf'), beta=float('inf')):
         best_move = None
         best_value = -float('inf')
-
-        # Determine the opponent's color
         opp_player = self.colors[1] if curr_player == self.colors[0] else self.colors[0]
-
-        # Enumerate all legal moves
         legal_moves = [col for col in range(7) if self.is_legal_move(col, state)]
 
-        # Base case: If the game is over or the depth is 0, return the evaluation value
         if depth == 0 or not legal_moves or self.game_is_over(state):
             return None, self.evaluate(state, curr_player)
 
-        # Iterate over all legal moves
+        if not use_alpha_beta:
+            print('Using minimax algorithm')
+
         for move in legal_moves:
             new_state = self.make_move(state, move, curr_player)
-            _, value = self.minimax(depth - 1, new_state, opp_player, use_alpha_beta)
-            value = -value  # Negate the value because we're switching players
+            _, value = self.minimax(depth - 1, new_state, opp_player, use_alpha_beta, -beta, -alpha)
+            value = -value
 
-            # Update the best move and value if necessary
             if value > best_value:
                 best_value = value
                 best_move = move
 
-            # Alpha-beta pruning (only if enabled)
             if use_alpha_beta:
-                alpha = best_value
-                if alpha >= 100000:
+                alpha = max(alpha, best_value)
+                if alpha >= beta:
+                    print('Using alpha-beta pruning')
                     break
 
         return best_move, best_value

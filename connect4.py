@@ -2,6 +2,7 @@
 import os
 import time
 from minimax import Minimax
+import random
 
 class Game:
     """
@@ -25,6 +26,9 @@ class Game:
         # Prompt for player types and create player objects
         self.create_players()
 
+        # Randomly shuffle the players to determine who plays first
+        random.shuffle(self.players)
+
         # Set the first player's turn
         self.turn = self.players[0]
 
@@ -44,10 +48,22 @@ class Game:
                 elif choice == 'c':
                     name = input(f"What is Player {i + 1}'s name? ")
                     use_alpha_beta = input(f"Do you want to use alpha-beta pruning for {name}? (y/n) ").lower() == 'y'
-                    self.players[i] = AIPlayer(name, self.colors[i], 5, use_alpha_beta)
+                    use_minimax_only = input(f"Do you want to use only minimax for {name}? (y/n) ").lower() == 'y'
+                    if use_alpha_beta and use_minimax_only:
+                        print("You can't select both alpha-beta pruning and minimax only. Please choose one.")
+                        continue
+                    self.players[i] = AIPlayer(name, self.colors[i], 5, use_alpha_beta, use_minimax_only)
                 else:
                     print("Invalid choice, please try again.")
             print(f"{self.players[i].name} will be {self.colors[i]}")
+
+    def first_move_random(self):
+        """
+        Makes the first move random.
+        """
+        random_column = random.randint(0, 6)
+        self.board[0][random_column] = self.turn.color
+        self.switch_turn()
 
     def new_game(self):
         """
@@ -58,6 +74,7 @@ class Game:
         self.winner = None
         self.turn = self.players[0]
         self.board = [[' ' for _ in range(7)] for _ in range(6)]
+        self.first_move_random()  # Make the first move random
 
     def switch_turn(self):
         """
@@ -242,18 +259,29 @@ class AIPlayer(Player):
     The AI algorithm is minimax with optional alpha-beta pruning.
     """
 
-    def __init__(self, name, color, difficulty=5, use_alpha_beta=True):
+    def __init__(self, name, color, difficulty=5, use_alpha_beta=False, use_minimax_only=False):
         self.type = "AI"
         self.name = name
         self.color = color
         self.difficulty = difficulty
         self.use_alpha_beta = use_alpha_beta
+        self.use_minimax_only = use_minimax_only
+        self.minimax = Minimax([])  # Instantiate Minimax object here
 
     def move(self, state):
         """
         Determines the best move for the AI player using the minimax algorithm with optional alpha-beta pruning.
         """
         print(f"{self.name}'s turn. {self.name} is {self.color}")
+        
+        # Instantiate a new Minimax object with the current game state
         minimax = Minimax(state)
-        best_move, _ = minimax.minimax(self.difficulty, state, self.color, self.use_alpha_beta)
+        
+        # Use the minimax algorithm to find the best move
+        if self.use_minimax_only:
+            best_move, _ = minimax.minimax(self.difficulty, state, self.color, False)
+        else:
+            best_move, _ = minimax.minimax(self.difficulty, state, self.color, self.use_alpha_beta)
+        
         return best_move
+
