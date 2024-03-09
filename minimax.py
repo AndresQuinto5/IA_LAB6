@@ -70,3 +70,109 @@ class Minimax:
         """
         return self.check_for_streak(state, self.colors[0], 4) >= 1 or self.check_for_streak(state, self.colors[1], 4) >= 1
 
+    def make_move(self, state, column, color):
+        """
+        Creates a new board state by making a move at the specified column for the given color.
+        """
+        new_state = [row[:] for row in state]
+        for i in range(6):
+            if new_state[i][column] == ' ':
+                new_state[i][column] = color
+                return new_state
+
+    def evaluate(self, state, color):
+        """
+        Evaluates the board state for the given color using a heuristic function.
+        The heuristic is based on the number of streaks of different lengths.
+        """
+        opp_color = self.colors[1] if color == self.colors[0] else self.colors[0]
+        my_fours = self.check_for_streak(state, color, 4)
+        my_threes = self.check_for_streak(state, color, 3)
+        my_twos = self.check_for_streak(state, color, 2)
+        opp_fours = self.check_for_streak(state, opp_color, 4)
+
+        if opp_fours > 0:
+            return -100000
+        else:
+            return my_fours * 100000 + my_threes * 100 + my_twos
+
+    def check_for_streak(self, state, color, streak):
+        """
+        Checks the board for streaks of the given length and color.
+        Returns the total count of streaks found.
+        """
+        count = 0
+        for i in range(6):
+            for j in range(7):
+                if state[i][j].lower() == color.lower():
+                    count += self.vertical_streak(i, j, state, streak)
+                    count += self.horizontal_streak(i, j, state, streak)
+                    count += self.diagonal_streak(i, j, state, streak)
+        return count
+
+    def vertical_streak(self, row, col, state, streak):
+        """
+        Checks for a vertical streak of the given length starting at the specified position.
+        Returns 1 if a streak is found, 0 otherwise.
+        """
+        consecutive_count = 0
+        for i in range(row, 6):
+            if state[i][col].lower() == state[row][col].lower():
+                consecutive_count += 1
+            else:
+                break
+
+        return 1 if consecutive_count >= streak else 0
+
+    def horizontal_streak(self, row, col, state, streak):
+        """
+        Checks for a horizontal streak of the given length starting at the specified position.
+        Returns 1 if a streak is found, 0 otherwise.
+        """
+        consecutive_count = 0
+        for j in range(col, 7):
+            if state[row][j].lower() == state[row][col].lower():
+                consecutive_count += 1
+            else:
+                break
+
+        return 1 if consecutive_count >= streak else 0
+
+    def diagonal_streak(self, row, col, state, streak):
+        """
+        Checks for diagonal streaks (positive and negative slopes) of the given length starting at the specified position.
+        Returns the total count of streaks found.
+        """
+        total = 0
+
+        # Check for diagonals with positive slope
+        consecutive_count = 0
+        j = col
+        for i in range(row, 6):
+            if j > 6:
+                break
+            elif state[i][j].lower() == state[row][col].lower():
+                consecutive_count += 1
+            else:
+                break
+            j += 1
+
+        if consecutive_count >= streak:
+            total += 1
+
+        # Check for diagonals with negative slope
+        consecutive_count = 0
+        j = col
+        for i in range(row, -1, -1):
+            if j > 6:
+                break
+            elif state[i][j].lower() == state[row][col].lower():
+                consecutive_count += 1
+            else:
+                break
+            j += 1
+
+        if consecutive_count >= streak:
+            total += 1
+
+        return total
