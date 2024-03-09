@@ -55,4 +55,18 @@ class Minimax:
 
         return best_move, best_value
 
+    def is_legal_move(self, column, state):
+        """
+        Checks if a move (column) is a legal move.
+        """
+        for i in range(6):
+            if state[i][column] == ' ':
+                return True
+        return False
+
+    def game_is_over(self, state):
+        """
+        Checks if the game is over by checking for any four-in-a-row.
+        """
+        return self.check_for_streak(state, self.colors[0], 4) >= 1 or self.check_for_streak(state, self.colors[1], 4) >= 1
 
