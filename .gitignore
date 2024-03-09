@@ -20,5 +20,5 @@ ipython_config.py
 /update_repo.ps1
 
 /play.py
-/connect4.py
+
 # End of https://www.toptal.com/developers/gitignore/api/jupyternotebooks
