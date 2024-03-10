@@ -1,4 +1,10 @@
 import random
+'''
+We use this references for our algorithms
+- [MiniMax pseudo-code:](https://es.wikipedia.org/wiki/Minimax)  
+- [Alpha-Beta pruning pseudo-code:](https://es.wikipedia.org/wiki/Poda_alfa-beta)  
+
+'''
 class Minimax:
     """
     Minimax object that takes a current Connect 4 board state and performs the minimax algorithm with alpha-beta pruning.
