@@ -3,7 +3,16 @@ import os
 import time
 from minimax import Minimax
 import random
+"""
 
+
+Code references to make the GAME:
+https://www.askpython.com/python/examples/connect-four-game
+
+For the board and states:
+https://oscarnieves100.medium.com/programming-a-connect-4-game-on-python-f0e787a3a0cf
+
+"""
 class Game:
     """
     Game object that holds the state of the Connect 4 board and game values.
