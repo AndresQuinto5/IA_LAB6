@@ -47,7 +47,7 @@ This project demonstrates the implementation of a Connect Four agent utilizing t
 
 ### References:
 
-[MiniMax pseudo-code:](https://es.wikipedia.org/wiki/Minimax)
-[Alpha-Beta pruning pseudo-code:](https://es.wikipedia.org/wiki/Poda_alfa-beta)
-[ConnectFour](https://www.askpython.com/python/examples/connect-four-game)
-[BoardReference](https://oscarnieves100.medium.com/programming-a-connect-4-game-on-python-f0e787a3a0cf)
+- [MiniMax pseudo-code:](https://es.wikipedia.org/wiki/Minimax)  
+- [Alpha-Beta pruning pseudo-code:](https://es.wikipedia.org/wiki/Poda_alfa-beta)  
+- [ConnectFour](https://www.askpython.com/python/examples/connect-four-game)  
+- [BoardReference](https://oscarnieves100.medium.com/programming-a-connect-4-game-on-python-f0e787a3a0cf)  
